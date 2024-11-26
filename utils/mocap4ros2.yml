@@ -1,0 +1,16 @@
+attach: true
+root: ./
+on_project_start: ". ${HOME}/mocap_ws/install/setup.sh"
+startup_window: mocap
+windows:
+  - mocap:
+      layout:
+      panes:
+        - ros2 launch mocap4r2_optitrack_driver optitrack2.launch.py
+            namespace:=mocap
+            config_file:=real_config/optitrack.yaml
+        - sleep 1; ros2 lifecycle set /mocap/mocap4r2_optitrack_driver_node activate
+        - sleep 2; ros2 launch as2_external_object_to_tf as2_external_object_to_tf_launch.py
+            config_file:=real_config/external_objects.yaml
+        - ros2 launch rviz/gates_viz.launch.py
+            use_sim_time:=false
